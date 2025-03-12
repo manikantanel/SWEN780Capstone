@@ -3,9 +3,9 @@ import os
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense, Dropout
 from sklearn.model_selection import train_test_split
-from tensorflow.keras.utils import to_categorical
+from tensorflow.keras.utils import to_categorical  
 
-DATA_PATH = os.path.join('data_collection')
+DATA_PATH = os.path.join('Data_collection')
 actions = np.array(["Hello", "Thank you", "Have a good day"])
 sequence_length = 30
 
@@ -37,4 +37,4 @@ model = Sequential([
 model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['categorical_accuracy'])
 history = model.fit(X_train, y_train, epochs=500, validation_data=(X_test, y_test), batch_size=32)
 
-model.save('action_1.h5')
+model.save('action_3.h5')
