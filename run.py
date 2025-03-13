@@ -9,10 +9,10 @@ import mediapipe as mp
 
 
 # Load trained model
-model = load_model('action_3.h5')
+model = load_model('action_4.h5')
 
 # Define gestures/actions
-actions = np.array(["Hello", "Thank you", "Have a good day"])
+actions = np.array(["Hello", "Thank you", "Have a good day", "Yes", "No"])
 
 # Initialize variables
 sequence = []
