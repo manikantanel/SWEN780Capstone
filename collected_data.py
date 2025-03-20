@@ -7,7 +7,7 @@ mp_holistic = mp.solutions.holistic
 mp_drawing = mp.solutions.drawing_utils
 
 DATA_PATH = os.path.join('Data_collection')
-actions = np.array(["Hello", "Thank you", "Have a good day"])
+actions = np.array(["Hello", "Thank you", "Have a good day", "Yes", "No"])
 no_sequences = 30
 sequence_length = 30
 
@@ -45,9 +45,26 @@ with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=
                     continue
                 image, results = mediapipe_detection(frame, holistic)
                 draw_styled_landmarks(image, results)
+                # Get frame dimensions
+                h, w, _ = frame.shape
                 if frame_num == 0:
-                    cv2.putText(image, f'Starting collection for {action} {sequence}', (120, 200),
-                                cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 4, cv2.LINE_AA)
+                    # cv2.putText(image, f'Starting collection for {action} {sequence}', (120, 200),
+                    #             cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 4, cv2.LINE_AA)
+                     # Generate text message
+                    message = f'Starting collection for {action} {sequence}'
+                    
+                    # Calculate text size for centering
+                    (text_width, text_height), baseline = cv2.getTextSize(message, cv2.FONT_HERSHEY_SIMPLEX, 1, 2)
+                    text_x = (w - text_width) // 2
+                    text_y = (h // 2) - 20
+
+                    # Draw background rectangle for better visibility
+                    cv2.rectangle(image, (text_x - 10, text_y - text_height - 10), 
+                                  (text_x + text_width + 10, text_y + 10), (0, 0, 0), -1)
+
+                    # Put centered text
+                    cv2.putText(image, message, (text_x, text_y),
+                                cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
                     cv2.imshow('Webcam Feed', image)
                     cv2.waitKey(1000)
                 keypoints = extract_keypoints(results)
