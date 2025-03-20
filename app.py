@@ -9,13 +9,13 @@ app = Flask(__name__)
 
 # Load Model
 try:
-    model = load_model('action_4.h5')
+    model = load_model('action_3.h5')
     print("✅ Model loaded successfully.")
 except Exception as e:
     print(f"❌ Error loading model: {e}")
     model = None
 
-actions = np.array(["Hello", "Thank you", "Have a good day", "Yes", "No"])
+actions = np.array(["Hello", "Thank you", "Have a good day"])
 sequence = []
 current_word = None
 webcam_active = False  # Tracks if the webcam is active
