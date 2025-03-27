@@ -54,61 +54,55 @@ def extract_keypoints(results):
     return np.concatenate([pose, lh, rh])
 
 def generate_frames():
-    """Generates video frames from the webcam with real-time ASL gesture detection."""
-    global sequence, current_word, webcam_active, restart_requested
+    global sequence, current_word, webcam_active, restart_requested, predict_paused
 
-    cap = get_video_capture()  
+    cap = get_video_capture()
     if not cap:
         yield b""
         return
 
     with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5) as holistic:
-        try:
-            sequence.clear()  # Reset sequence on webcam start
-            current_word = None  # Clear last detected word
-            
-            while webcam_active:
-                if restart_requested:
-                    break  # Stop the loop when restart is requested
+        sequence.clear()
+        current_word = None
+        webcam_active = True
+        predict_paused = False
 
-                ret, frame = cap.read()
-                if not ret:
-                    cap.release()
-                    webcam_active = False
-                    break
+        while webcam_active:
+            ret, frame = cap.read()
+            if not ret:
+                break
 
-                image, results = mediapipe_detection(frame, holistic)
-                draw_styled_landmarks(image, results)
+            image, results = mediapipe_detection(frame, holistic)
+            # draw_styled_landmarks(image, results)
 
-                hands_visible = results.left_hand_landmarks or results.right_hand_landmarks
+            hands_visible = results.left_hand_landmarks or results.right_hand_landmarks
 
-                if hands_visible:
-                    keypoints = extract_keypoints(results)
-                    sequence.append(keypoints)
-                    sequence = sequence[-30:]
+            if hands_visible and not predict_paused:
+                keypoints = extract_keypoints(results)
+                sequence.append(keypoints)
+                sequence = sequence[-30:]
 
-                    if len(sequence) == 30:
-                        try:
-                            res = model.predict(np.expand_dims(sequence, axis=0))[0]
-                            detected_word = actions[np.argmax(res)]
-                            
-                            if res[np.argmax(res)] > threshold and detected_word != current_word:
-                                current_word = detected_word
-                                webcam_active = False
-                                cap.release()
-                                print(f"✅ Detected gesture: {current_word}")
-                                break  
-                        except Exception as pred_error:
-                            print(f"❌ Prediction error: {pred_error}")
+                if len(sequence) == 30:
+                    try:
+                        res = model.predict(np.expand_dims(sequence, axis=0))[0]
+                        detected_word = actions[np.argmax(res)]
 
-                _, buffer = cv2.imencode('.jpg', image)
-                frame = buffer.tobytes()
-                yield (b'--frame\r\n'
-                       b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+                        if res[np.argmax(res)] > threshold and detected_word != current_word:
+                            current_word = detected_word
+                            predict_paused = True  # Pause further detection
+                            print(f"✅ Detected gesture: {current_word}")
+                    except Exception as pred_error:
+                        print(f"❌ Prediction error: {pred_error}")
 
-        finally:
-            cap.release()
-            webcam_active = False
+            _, buffer = cv2.imencode('.jpg', image)
+            frame = buffer.tobytes()
+
+            yield (b'--frame\r\n'
+                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+
+        cap.release()
+        webcam_active = False
+
 
 @app.route('/')
 def index():
@@ -120,16 +114,26 @@ def video_feed():
     restart_requested = False  # Reset restart flag
     return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
-@app.route('/restart_feed')
-def restart_feed():
-    """Handles restarting the webcam when requested."""
-    global restart_requested, current_word, sequence, webcam_active
-    restart_requested = True  # Request a restart
-    current_word = None  # Reset detected gesture
-    sequence.clear()  # Clear sequence data
-    webcam_active = False  # Ensure the webcam is marked inactive
-    time.sleep(1)  # Allow time for the webcam to reset
-    return jsonify({"message": "Webcam restarting..."})
+# @app.route('/restart_feed')
+# def restart_feed():
+#     """Handles restarting the webcam when requested."""
+#     global restart_requested, current_word, sequence, webcam_active
+#     restart_requested = True  # Request a restart
+#     current_word = None  # Reset detected gesture
+#     sequence.clear()  # Clear sequence data
+#     webcam_active = False  # Ensure the webcam is marked inactive
+#     # time.sleep(1)  # Allow time for the webcam to reset
+#     return jsonify({"message": "Webcam restarting..."})
+
+@app.route('/clear_gesture')
+def clear_gesture():
+    global current_word, sequence, predict_paused
+    current_word = None
+    sequence.clear()
+    predict_paused = False
+    return jsonify({"message": "Gesture reset for new detection."})
+
+
 
 @app.route('/get_current_gesture')
 def get_current_gesture():
