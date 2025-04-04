@@ -1,161 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ASL Dictionary</title>
-    <style>
-        /* RIT Colors */
-        :root {
-            --rit-orange: #f76902;
-            --rit-black: #000000;
-            --rit-gray: #f2f2f2;
-        }
-
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            padding: 0;
-            margin: 0;
-            background-color: var(--rit-gray);
-        }
-
-        /* Navigation Bar */
-        nav {
-            background-color: var(--rit-black);
-            color: white;
-            padding: 25px 0;
-            font-size: 30px;
-            font-weight: bold;
-        }
-
-        h1 {
-            color: var(--rit-orange);
-            margin-top: 20px;
-        }
-
-        #status {
-            margin-top: 10px;
-            font-weight: bold;
-        }
-
-        #video-container {
-            display: block;
-            margin: 20px auto;
-        }
-
-        #gesture-text {
-            font-size: 24px;
-            margin-top: 20px;
-            font-weight: bold;
-        }
-
-        #restart-btn {
-            display: none;
-            padding: 10px 20px;
-            font-size: 18px;
-            cursor: pointer;
-            background-color: var(--rit-orange);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            margin: 20px auto;
-        }
-
-        .center-btn {
-            display: flex;
-            justify-content: center;
-        }
-
-        footer {
-            background-color: var(--rit-black);
-            color: white;
-            padding: 10px 0;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            font-size: 14px;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ASL to Text Dictionary</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
 
-    <!-- Navigation Bar -->
-    <nav>
-        ASLtoText Dictionary
-    </nav>
+  <nav>ASL to Text Dictionary</nav>
 
-    <!-- <h1>ASLtoText Dictionary</h1> -->
+  <main>
     <p id="status">Loading...</p>
 
     <div id="video-container">
-        <img id="video-feed" src="{{ url_for('video_feed') }}" width="640" height="480">
+      <img id="video-feed" src="{{ url_for('video_feed') }}" width="640" height="480" alt="Webcam Feed">
     </div>
 
-    <p id="gesture-text">Waiting for sign...</p>
-
-    <div class="center-btn">
-        <button id="restart-btn" onclick="restartWebcam()">Another word</button>
+    <div id="gesture-display">
+      <div id="gesture-text">Waiting for sign...</div>
+      <div id="gesture-meaning">Meaning will appear here...</div>
     </div>
 
-    <footer>
-        Coded by Manikantan Eakiri Lakshmanan • Spring 2025 • Capstone Project • Software Engineering
-    </footer>
+    <button id="restart-btn" onclick="restartWebcam()">Detect Another Word</button>
+  </main>
 
-    <script>
-        // function checkGesture() {
-        //     fetch('/get_current_gesture')
-        //         .then(response => response.json())
-        //         .then(data => {
-        //             if (data.gesture !== "No gesture detected") {
-        //                 document.getElementById("gesture-text").innerText = "Detected: " + data.gesture;
-        //                 document.getElementById("status").innerText = "Detection Complete!";
-        //                 document.getElementById("video-container").style.display = "none";
-        //                 document.getElementById("restart-btn").style.display = "block";
-        //             }
-        //         });
-        // }
+  <footer>
+    &copy; 2025 Manikantan Eakiri Lakshmanan &bull; Spring 2025 &bull; Capstone Project &bull; Software Engineering
+  </footer>
 
-        // function restartWebcam() {
-        //     fetch('/restart_feed')
-        //         .then(response => response.json())
-        //         .then(() => {
-        //             document.getElementById("gesture-text").innerText = "Waiting for sign...";
-        //             document.getElementById("status").innerText = "Loading...";
-        //             document.getElementById("video-feed").src = "/video_feed?" + new Date().getTime();
-        //             document.getElementById("video-container").style.display = "block";
-        //             document.getElementById("restart-btn").style.display = "none";
-        //         });
-        // }
-
-        function checkGesture() {
-        fetch('/get_current_gesture')
-            .then(response => response.json())
-            .then(data => {
-                if (data.gesture !== "No gesture detected") {
-                    document.getElementById("gesture-text").innerText = "Detected: " + data.gesture;
-                    document.getElementById("status").innerText = "Detection Complete!";
-                    document.getElementById("video-container").style.display = "none";
-                    document.getElementById("restart-btn").style.display = "block";
-                }
-            });
-        }
-
-        function restartWebcam() {
-            fetch('/clear_gesture')
-            .then(response => response.json())
-            .then(() => {
-                document.getElementById("gesture-text").innerText = "Waiting for sign...";
-                document.getElementById("status").innerText = "Loading...";
-                document.getElementById("video-container").style.display = "block";
-                document.getElementById("restart-btn").style.display = "none";
-            });
-        }
-
-
-
-        setInterval(checkGesture, 2000);
-    </script>
-
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>
