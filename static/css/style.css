@@ -1,0 +1,87 @@
+/* RIT Theme Colors */
+:root {
+    --rit-orange: #f76902;
+    --rit-black: #000000;
+    --rit-gray: #f2f2f2;
+  }
+  
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--rit-gray);
+    color: var(--rit-black);
+  }
+  
+  nav {
+    background-color: var(--rit-black);
+    color: white;
+    padding: 25px 0;
+    font-size: 30px;
+    font-weight: bold;
+    text-align: center;
+  }
+  
+  main {
+    text-align: center;
+    padding: 40px 20px;
+  }
+  
+  #status {
+    margin-top: 10px;
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  #video-container {
+    display: block;
+    margin: 20px auto;
+  }
+  
+  #gesture-display {
+    margin-top: 30px;
+    background-color: white;
+    padding: 20px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+  
+  #gesture-text {
+    font-size: 28px;
+    font-weight: bold;
+    color: var(--rit-orange);
+  }
+  
+  #gesture-meaning {
+    font-size: 20px;
+    margin-top: 10px;
+    font-style: italic;
+  }
+  
+  #restart-btn {
+    display: none;
+    padding: 12px 24px;
+    font-size: 18px;
+    cursor: pointer;
+    background-color: var(--rit-orange);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    margin-top: 30px;
+  }
+  
+  footer {
+    background-color: var(--rit-black);
+    color: white;
+    padding: 10px 0;
+    text-align: center;
+    font-size: 12px;
+    font-style: italic;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+  }
+  
