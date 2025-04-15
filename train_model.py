@@ -1,12 +1,16 @@
 import numpy as np
 import os
+import matplotlib.pyplot as plt
+import seaborn as sns
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense, Dropout
 from sklearn.model_selection import train_test_split
 from tensorflow.keras.utils import to_categorical  
+from sklearn.metrics import confusion_matrix, classification_report
+import itertools
 
 DATA_PATH = os.path.join('Data_collection')
-actions = np.array(["Hello", "Thank you", "Have a good day", "Yes", "No"])
+actions = np.array(["Hello", "Thank you", "Have a good day"])
 sequence_length = 30
 
 sequences, labels = [], []
@@ -37,4 +41,47 @@ model = Sequential([
 model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['categorical_accuracy'])
 history = model.fit(X_train, y_train, epochs=500, validation_data=(X_test, y_test), batch_size=32)
 
-model.save('action_4.h5')
+# Save the model
+model.save('action.h5')
+
+# Plot training history
+plt.figure(figsize=(12, 5))
+
+# Accuracy plot
+plt.subplot(1, 2, 1)
+plt.plot(history.history['categorical_accuracy'], label='Train Accuracy')
+plt.plot(history.history['val_categorical_accuracy'], label='Validation Accuracy')
+plt.xlabel('Epochs')
+plt.ylabel('Accuracy')
+plt.title('Model Accuracy')
+plt.legend()
+
+# Loss plot
+plt.subplot(1, 2, 2)
+plt.plot(history.history['loss'], label='Train Loss')
+plt.plot(history.history['val_loss'], label='Validation Loss')
+plt.xlabel('Epochs')
+plt.ylabel('Loss')
+plt.title('Model Loss')
+plt.legend()
+
+plt.show()
+
+# Predict the test set
+y_pred = model.predict(X_test)
+y_pred_labels = np.argmax(y_pred, axis=1)
+y_test_labels = np.argmax(y_test, axis=1)
+
+# Compute the confusion matrix
+conf_matrix = confusion_matrix(y_test_labels, y_pred_labels)
+
+# Plot the confusion matrix
+plt.figure(figsize=(8, 6))
+sns.heatmap(conf_matrix, annot=True, cmap='Blues', xticklabels=actions, yticklabels=actions, fmt='d')
+plt.xlabel('Predicted Label')
+plt.ylabel('True Label')
+plt.title('Confusion Matrix')
+plt.show()
+
+# Print classification report
+print("Classification Report:\n", classification_report(y_test_labels, y_pred_labels, target_names=actions))

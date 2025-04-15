@@ -9,13 +9,18 @@ app = Flask(__name__)
 
 # Load Model
 try:
-    model = load_model('action_3.h5')
+    model = load_model('action.h5')
     print("✅ Model loaded successfully.")
 except Exception as e:
     print(f"❌ Error loading model: {e}")
     model = None
 
 actions = np.array(["Hello", "Thank you", "Have a good day"])
+gesture_meanings = {
+    "Hello": "A common greeting",
+    "Thank you": "Expression of gratitude",
+    "Have a good day": "Wishing someone well for the rest of the day"
+}
 sequence = []
 current_word = None
 webcam_active = False  # Tracks if the webcam is active
@@ -114,16 +119,6 @@ def video_feed():
     restart_requested = False  # Reset restart flag
     return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
-# @app.route('/restart_feed')
-# def restart_feed():
-#     """Handles restarting the webcam when requested."""
-#     global restart_requested, current_word, sequence, webcam_active
-#     restart_requested = True  # Request a restart
-#     current_word = None  # Reset detected gesture
-#     sequence.clear()  # Clear sequence data
-#     webcam_active = False  # Ensure the webcam is marked inactive
-#     # time.sleep(1)  # Allow time for the webcam to reset
-#     return jsonify({"message": "Webcam restarting..."})
 
 @app.route('/clear_gesture')
 def clear_gesture():
@@ -134,11 +129,15 @@ def clear_gesture():
     return jsonify({"message": "Gesture reset for new detection."})
 
 
-
 @app.route('/get_current_gesture')
 def get_current_gesture():
     global current_word
-    return jsonify({"gesture": current_word or "No gesture detected"})
+    meaning = gesture_meanings.get(current_word, "No gesture meaning available")
+    return jsonify({
+        "gesture": current_word or "No gesture detected",
+        "meaning": meaning
+    })
+
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0")

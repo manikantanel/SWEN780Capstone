@@ -2,17 +2,13 @@ import numpy as np
 import cv2
 from tensorflow.keras.models import load_model
 import mediapipe as mp
-# from app import app
-
-# if __name__ == "__main__":
-#     app.run(debug=True)
 
 
 # Load trained model
-model = load_model('action_4.h5')
+model = load_model('action.h5')
 
 # Define gestures/actions
-actions = np.array(["Hello", "Thank you", "Have a good day", "Yes", "No"])
+actions = np.array(["Hello", "Thank you", "Have a good day"])
 
 # Initialize variables
 sequence = []
