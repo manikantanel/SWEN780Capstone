@@ -86,14 +86,15 @@ Manual path version:
         "C:/Users/YourName/AppData/Local/Programs/Python/Python38/python.exe" "c:/Users/YourName/SWEN780Capstone/app.py"
 Then go to:
 
-http://localhost:5000
+        http://localhost:5000
+
+You’ll see a live webcam feed and real-time detected gestures displayed in text.
 
 ![image](https://github.com/user-attachments/assets/ddf4d57f-cf16-464a-8b93-32decd7820f0)
 
 ![image](https://github.com/user-attachments/assets/f413aa2a-c3e1-494f-8e0f-522083c1ff64)
 
 
-You’ll see a live webcam feed and real-time detected gestures displayed in text.
 
 If you want to test setup, 
 
