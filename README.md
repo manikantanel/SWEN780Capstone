@@ -1,4 +1,4 @@
-# SWEN780Capstone
+# ASL to Text Dictionary Using Gesture Detection
 
 Installation & Setup
 
