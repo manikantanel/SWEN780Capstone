@@ -11,18 +11,17 @@ Installation & Setup
         Go to the official Python release page:
         🔗 https://www.python.org/downloads/release/python-3810/
 
-Scroll down and download:
-✅ Windows x86-64 executable installer
+Scroll down and download: Windows x86-64 executable installer
 
 Run the installer and make sure to:
 
-✅ Check “Add Python 3.8 to PATH”
+* Check “Add Python 3.8 to PATH”
 
-✅ Select “Customize Installation”
+* Select “Customize Installation”
 
-✅ Ensure “pip” and “venv” are checked
+* Ensure “pip” and “venv” are checked
 
-✅ Finish installation
+* Finish installation
 
 Verify in terminal:
 
