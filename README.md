@@ -41,6 +41,12 @@ For Windows Command Prompt:
 
         pip install -r requirements.txt
 
+If you want to test setup, 
+
+You can verify all imports are installed with:
+
+        python test_requirement.py
+
 How to work on this project
 
 Step 1: Collect Gesture Data
@@ -95,12 +101,6 @@ You’ll see a live webcam feed and real-time detected gestures displayed in tex
 ![image](https://github.com/user-attachments/assets/f413aa2a-c3e1-494f-8e0f-522083c1ff64)
 
 
-
-If you want to test setup, 
-
-You can verify all imports are installed with:
-
-python test_requirement.py
 
 Author: Manikantan Eakiri Lakshmanan
 Email:me2083@rit.edu
